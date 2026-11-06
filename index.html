@@ -82,6 +82,42 @@ svg{display:block}
 .mixer.drop-on{background:rgba(255,255,255,.8);box-shadow:0 0 0 2px var(--ink),0 40px 80px -50px rgba(0,0,0,.3)}
 .mixer.shake{animation:shake .45s}
 @keyframes shake{20%{margin-left:-8px}40%{margin-left:8px}60%{margin-left:-5px}80%{margin-left:4px}}
+
+/* ---------- phones: sound grid, sticky mini mixer, mixer drawer (html.mob is set by layout()) ---------- */
+.mgrab,.mbar{display:none}
+.navfade{position:fixed;left:0;right:0;top:0;height:88px;z-index:55;pointer-events:none;background:linear-gradient(var(--bg) 58%,transparent);opacity:0;transition:opacity .4s}
+html.mob.baron .navfade{opacity:1}
+html.mob .lhead{justify-content:center}
+html.mob .lhead>span:first-child,html.mob .lhead .arrows,html.mob .edge{display:none}
+html.mob .lhead .lhint{display:block;position:static;transform:none;font-size:11px;letter-spacing:.08em}
+html.mob .card .clabel{font-size:7.2px;letter-spacing:.035em;top:calc(100% + 8px);max-width:calc(100% + 24px)}
+html.mob .card .badge{width:18px;height:18px;right:-4px;top:-4px;box-shadow:0 0 0 2px var(--bg)}
+html.mob .card .badge .ic{width:9px;height:9px}
+.mbar{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:80;align-items:center;gap:14px;padding:11px 11px 11px 13px;background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-radius:26px;box-shadow:0 18px 40px -18px rgba(0,0,0,.35),0 1px 2px rgba(0,0,0,.05);transform:translateY(150%);transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .25s}
+html.mob .mbar{display:flex}
+html.mob.baron .mbar{transform:none}
+html.mob.drawer .mbar{transform:translateY(150%)}
+.mbar.hot{box-shadow:0 0 0 2px var(--ink),0 18px 40px -18px rgba(0,0,0,.35)}
+.mbar.bump .mb-stack{animation:bump .5s cubic-bezier(.3,1.6,.5,1)}
+.mbar.shake{animation:shake .45s}
+.mb-stack{position:relative;width:66px;height:56px;flex:none}
+.mb-stack i{position:absolute;top:3px;width:50px;height:50px;border-radius:13px;background-size:cover!important;background-position:center!important;box-shadow:0 0 0 2px #fff,0 8px 16px -8px rgba(0,0,0,.45);transition:transform .45s cubic-bezier(.3,1.4,.5,1),left .45s cubic-bezier(.3,1.4,.5,1)}
+.mb-stack i.empty{left:0;border:1.5px dashed #c6c6c6;box-shadow:none;display:grid;place-items:center;color:#a8a8a8}
+.mb-stack i.empty .ic{width:18px;height:18px}
+.mb-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.mb-name{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-open{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.06);display:grid;place-items:center;flex:none;transition:background .2s,transform .15s}
+.mb-open:active{transform:scale(.94)}
+.mb-open .ic{width:20px;height:20px;stroke-width:1.5}
+.mscrim{position:fixed;inset:0;z-index:88;touch-action:none;background:rgba(18,18,18,.32);opacity:0;pointer-events:none;transition:opacity .4s}
+html.drawer .mscrim{opacity:1;pointer-events:auto}
+html.mob .mixer{opacity:1;position:fixed;left:0;right:0;top:auto;bottom:0;width:auto;max-height:90vh;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;border-radius:28px 28px 0 0;border-width:1px 0 0;padding:0 16px calc(22px + env(safe-area-inset-bottom));background:rgba(248,248,248,.97);box-shadow:0 -24px 60px -30px rgba(0,0,0,.45);z-index:90;transform:translateY(105%);visibility:hidden;transition:transform .5s cubic-bezier(.22,1,.36,1),visibility 0s .5s}
+html.mob.drawer .mixer{transform:none;visibility:visible;transition:transform .5s cubic-bezier(.22,1,.36,1),visibility 0s}
+html.mob .mgrab{display:flex;justify-content:center;align-items:center;position:sticky;top:0;height:36px;margin:0 -16px;grid-column:1/-1;touch-action:none;z-index:3;background:inherit;border-radius:28px 28px 0 0}
+.mgrab i{width:42px;height:5px;border-radius:3px;background:#cfcfcf}
+.mclose{position:absolute;right:12px;top:8px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.06);display:grid;place-items:center;color:#555}
+.mclose .ic{width:14px;height:14px}
+html.mob.baron .toasts{bottom:calc(104px + env(safe-area-inset-bottom))}
 .mleft{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:0}
 .orbbox{position:relative;width:210px;height:210px}
 .orb{width:100%;height:100%}
@@ -335,7 +371,8 @@ footer{padding:40px 24px 60px;text-align:center;font-size:11px;letter-spacing:.0
     <div class="edge l" id="edgeL" aria-hidden="true"></div>
     <div class="edge r" id="edgeR" aria-hidden="true"></div>
 
-    <div class="mixer" id="mixer">
+    <div class="mixer" id="mixer" aria-label="Mixer">
+      <div class="mgrab" id="mgrab"><i></i><button class="mclose" id="mclose" aria-label="Close mixer"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
       <div class="mleft">
         <div class="orbbox">
           <svg class="orb" viewBox="0 0 240 240" aria-hidden="true" style="overflow:visible"><g filter="url(#blend)" id="orbg"></g></svg>
@@ -383,6 +420,14 @@ footer{padding:40px 24px 60px;text-align:center;font-size:11px;letter-spacing:.0
 </main>
 
 <div class="bcur" id="bcur" aria-hidden="true"><svg viewBox="0 0 96 96"><g filter="url(#blendS)"><circle id="bc0" cx="48" cy="48" r="9"/><circle id="bc1" cx="48" cy="48" r="7"/><circle id="bc2" cx="48" cy="48" r="5.5"/></g></svg></div>
+<!-- phones: sticky mini mixer + drawer backdrop -->
+<div class="mbar" id="mbar">
+  <button class="mb-stack" id="mbStack" aria-label="Open the mixer"></button>
+  <div class="mb-mid"><div class="mb-name" id="mbName">Your mix</div><input type="range" id="mbVol" min="0" max="100" value="80" aria-label="Mix volume"></div>
+  <button class="mb-open" id="mbOpen" aria-label="Open the mixer"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+</div>
+<div class="mscrim" id="mscrim"></div>
+<div class="navfade" aria-hidden="true"></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="pop" id="pop" hidden></div>
 
@@ -675,6 +720,7 @@ const ICON = {
   share:'<svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>',
   dl:'<svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
   open:'<svg class="ic" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+  plus:'<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
   trash:'<svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
 };
 
@@ -920,28 +966,25 @@ function layout(){
   Lay.cx = w / 2;
   Lay.cy = (mob ? 96 : 100) + Lay.sHero / 2 + Lay.R;
   // line carousel + mixer, measured from the bottom of the window
-  Lay.sLine = mob ? 76 : Math.round(clamp(w * .07, 86, 112));
-  Lay.gap = mob ? 36 : 46; Lay.pad = mob ? 16 : 40;
+  document.documentElement.classList.toggle('mob', mob);
+  cardsEl.style.setProperty('--s', Lay.sHero + 'px');
+  if (mob) return layoutPhone(w, h);
+  if (mixerEl.parentNode !== stage){ stage.insertBefore(mixerEl, $('#hint')); closeDrawer(); }
+  if (barOn){ barOn = false; document.documentElement.classList.remove('baron'); }
+  Lay.sLine = Math.round(clamp(w * .07, 86, 112));
+  Lay.gap = 46; Lay.pad = 40;
   const mh = mixerEl.offsetHeight, block = 64 + Lay.sLine + 34;
-  const mixBase = h - mh - (mob ? 16 : 28), lift = 150;
+  const mixBase = h - mh - 28, lift = 150;
   Lay.mixTop = Math.round(Math.max(mixBase - lift, 64 + block + 24));
   const lhBase = 64 + Math.max(10, (mixBase - 64 - block) * .62);
   Lay.lhTop = Math.round(clamp(lhBase - lift, 72, Lay.mixTop - block - 12));
   Lay.lineTop = Lay.lhTop + 64;   // clear space between the header/arrows and the cards
   Lay.lineY = Lay.lineTop + Lay.sLine / 2;
   Lay.dist = Math.round(h * 1.8);
-  cardsEl.style.setProperty('--s', Lay.sHero + 'px');
   lhead.style.top = Lay.lhTop + 'px';
   mixerEl.style.top = Lay.mixTop + 'px';
   for (const e of edges){ e.style.top = (Lay.lineTop - 14) + 'px'; e.style.height = (Lay.sLine + 60) + 'px'; }
-  const arcIn = Lay.cy - Lay.R + Lay.sHero * .75;
-  const mid = mob ? Lay.cy - Lay.R * .15 : arcIn + (h - arcIn) * .42;
-  const hcTop = Math.round(mid - hcenter.offsetHeight / 2);
-  hcenter.style.top = hcTop + 'px';
-  // phones: pull the scroll hint up into the open space under the copy
-  const hint = $('#hint');
-  if (mob){ hint.style.top = (hcTop + hcenter.offsetHeight + 64) + 'px'; hint.style.bottom = 'auto'; }
-  else { hint.style.top = ''; hint.style.bottom = ''; }
+  placeHero(false);
   Lay.stageH = Math.max(h, Lay.mixTop + mh + 90);   // room for the mixer's shadow
   Lay.hold = Math.round(h * 1.4);                   // extra scroll where the mixer stays pinned
   stage.style.height = Lay.stageH + 'px';
@@ -951,11 +994,41 @@ function layout(){
   car.off = clamp(car.off, 0, Lay.overflow);
 }
 
+function placeHero(mob){
+  const h = Lay.h, arcIn = Lay.cy - Lay.R + Lay.sHero * .75;
+  const mid = mob ? Lay.cy - Lay.R * .15 : arcIn + (h - arcIn) * .42;
+  const hcTop = Math.round(mid - hcenter.offsetHeight / 2);
+  hcenter.style.top = hcTop + 'px';
+  // phones: pull the scroll hint up into the open space under the copy
+  const hint = $('#hint');
+  if (mob){ hint.style.top = (hcTop + hcenter.offsetHeight + 64) + 'px'; hint.style.bottom = 'auto'; }
+  else { hint.style.top = ''; hint.style.bottom = ''; }
+}
+/* phones: after the hero the ring settles into a 3-column grid that scrolls with the page;
+   the mixer lives in a bottom drawer, summarised by a sticky mini bar */
+function layoutPhone(w, h){
+  placeHero(true);
+  if (mixerEl.parentNode !== document.body){
+    document.body.appendChild(mixerEl);
+    for (const k of ['top', 'opacity', 'transform', 'pointerEvents']) mixerEl.style[k] = '';
+  }
+  Lay.sLine = Math.round(clamp(w * .21, 72, 96));                 // grid card size
+  Lay.gpx = Math.round(clamp(w * .29, Lay.sLine + 20, 150));      // column pitch
+  Lay.gpy = Lay.sLine + 48;                                        // row pitch, room for the label
+  Lay.lhTop = 96; Lay.gridTop = Lay.lhTop + 52;
+  Lay.gridH = Math.ceil(TRACKS.length / 3) * Lay.gpy;
+  Lay.gscroll = Math.max(0, Lay.gridTop + Lay.gridH + 120 - h);   // the grid scrolls; 120px clears the mini bar
+  Lay.dist = Math.round(h * 1.3);
+  Lay.overflow = 0; car.off = 0;
+  Lay.stageH = h; stage.style.height = h + 'px';
+  hero.style.height = (h + Lay.dist + Lay.gscroll) + 'px';
+}
+
 /* ======================================================================
    Cards (circle -> line carousel)
    ====================================================================== */
 const C = TRACKS.map((t, i) => ({t, i, base: i * 360 / TRACKS.length, bl: 0, order: i, el: null, f: ''}));
-let rot = 6, rotVel = 0, hoverId = null, curP = 0;
+let rot = 6, rotVel = 0, hoverId = null, curP = 0, barOn = false;
 const car = {off: 0, vel: 0};
 const norm = a => ((a + 180) % 360 + 360) % 360 - 180;
 function computeOrder(){ C.map(c => ({c, a: norm(c.base + rot)})).sort((x, y) => x.a - y.a).forEach((o, k) => o.c.order = k); }
@@ -1050,7 +1123,20 @@ function renderMeta(){
   C.forEach(c => c.el.classList.toggle('in', inMixer(c.t.id) >= 0));
   $('#orbEmpty').style.opacity = n ? 0 : 1;
   if (heroId) showHero(heroId, true);
+  renderBar();
 }
+/* phones: the sticky mini mixer — the latest sounds stacked as cards, the mix name and its volume */
+function renderBar(){
+  const list = mixerList(), top = list.slice(-3);
+  $('#mbStack').innerHTML = top.length
+    ? top.map((x, i) => `<i style="background:${T[x.id].bg};left:${i * 8}px;transform:rotate(${(i - top.length + 1) * 6}deg)"></i>`).join('')
+    : `<i class="empty">${ICON.plus}</i>`;
+  $('#mbName').textContent = S.name.trim() || (list.length ? autoName(list) : 'Tap a sound to start your mix');
+  $('#mbVol').style.setProperty('--c', list.length ? T[list[list.length - 1].id].color : '#1b1b1b');
+}
+function bumpBar(){ const b = $('#mbar'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+function openDrawer(){ if (!Lay.mob) return goTo('mixer'); closePop(); document.documentElement.classList.add('drawer'); }
+function closeDrawer(){ document.documentElement.classList.remove('drawer'); mixerEl.style.transform = ''; }
 
 function afterMixerChange(popIndex){
   renderSlots(popIndex); renderMeta();
@@ -1081,7 +1167,8 @@ function addTrack(id, slot){
 }
 function removeSlot(i){ if (!S.slots[i]) return; S.slots[i] = null; afterMixerChange(); }
 function mixerFull(){
-  mixerEl.classList.remove('shake'); void mixerEl.offsetWidth; mixerEl.classList.add('shake');
+  const el = Lay.mob && barOn ? $('#mbar') : mixerEl;
+  el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
   toast('Your mix holds up to 6 sounds. Remove one first.');
 }
 function toggleTrack(id, fromEl){
@@ -1089,9 +1176,11 @@ function toggleTrack(id, fromEl){
   if (cur >= 0){ removeSlot(cur); toast(`${T[id].name} removed`); return; }
   const i = addTrack(id);
   if (i < 0) return;
-  const target = curP > .6 ? slotEls[i].querySelector('.slot-art') : $('#mixpill');
+  const onBar = Lay.mob && barOn;
+  const target = onBar ? $('#mbStack') : curP > .6 ? slotEls[i].querySelector('.slot-art') : $('#mixpill');
   fly(fromEl.querySelector('.art') || fromEl, target, T[id].bg);
-  if (curP <= .6){ const pill = $('#mixpill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); }
+  if (onBar) setTimeout(bumpBar, 520);
+  else if (curP <= .6){ const pill = $('#mixpill'); pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump'); }
   if (curP < .3 && !S.hinted){ S.hinted = true; toast(`${T[id].name} is playing. Scroll down to mix more.`); }
 }
 function fly(fromEl, toEl, bg){
@@ -1122,10 +1211,25 @@ slotsEl.addEventListener('pointerdown', e => {
 });
 
 $('#mname').value = S.name;
-$('#mname').addEventListener('input', e => { S.name = e.target.value; store.set('mamora.mixer', {slots: S.slots, name: S.name}); });
+$('#mname').addEventListener('input', e => { S.name = e.target.value; renderBar(); store.set('mamora.mixer', {slots: S.slots, name: S.name}); });
 $('#mname').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
-$('#mvol').addEventListener('input', e => { const v = +e.target.value; e.target.style.setProperty('--v', v + '%'); Engine.setMaster(gainFor(v) * 1.15); });
-$('#mvol').style.setProperty('--v', '80%');
+function setMasterVol(v){ for (const el of [$('#mvol'), $('#mbVol')]){ el.value = v; el.style.setProperty('--v', v + '%'); } Engine.setMaster(gainFor(v) * 1.15); }
+for (const id of ['#mvol', '#mbVol']) $(id).addEventListener('input', e => setMasterVol(+e.target.value));
+for (const id of ['#mvol', '#mbVol']) $(id).style.setProperty('--v', '80%');
+/* phones: open the drawer from either end of the mini bar or the nav pill; close via ✕, backdrop, Escape or a swipe down */
+for (const id of ['#mbStack', '#mbOpen']) $(id).addEventListener('click', openDrawer);
+$('#mclose').addEventListener('click', closeDrawer);
+$('#mscrim').addEventListener('click', closeDrawer);
+// lock the page behind the open drawer (overflow:hidden would break the sticky hero stage)
+for (const ev of ['wheel', 'touchmove']) $('#mscrim').addEventListener(ev, e => e.preventDefault(), {passive: false});
+addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+{
+  const grab = $('#mgrab'); let sy = null, dy = 0;
+  grab.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; sy = e.clientY; dy = 0; grab.setPointerCapture(e.pointerId); mixerEl.style.transition = 'none'; });
+  grab.addEventListener('pointermove', e => { if (sy === null) return; dy = Math.max(0, e.clientY - sy); mixerEl.style.transform = `translateY(${dy}px)`; });
+  const end = () => { if (sy === null) return; sy = null; mixerEl.style.transition = ''; mixerEl.style.transform = ''; if (dy > 90) closeDrawer(); };
+  grab.addEventListener('pointerup', end); grab.addEventListener('pointercancel', end);
+}
 
 /* transport */
 function playMixer(){
@@ -1140,7 +1244,7 @@ function togglePlay(){
 }
 $('#bigplay').addEventListener('click', () => { if (Engine.playing && Engine.source === 'mixer') Engine.pause(); else playMixer(); });
 $('#navplay').addEventListener('click', e => { e.stopPropagation(); if (!mixerList().length && !Engine.playing && Engine.source === 'mixer'){ goTo('mixer'); toast('Pick a sound to start'); return; } togglePlay(); });
-$('#mixpill').addEventListener('click', () => goTo('mixer'));
+$('#mixpill').addEventListener('click', () => Lay.mob ? openDrawer() : goTo('mixer'));
 function onEngine(){
   BG.meta();
   const mixPlaying = Engine.playing && Engine.source === 'mixer';
@@ -1221,7 +1325,7 @@ window.addEventListener('pointermove', e => {
   P.x = e.clientX; P.y = e.clientY;
   const dx = P.x - P.x0, dy = P.y - P.y0;
   if (P.mode === 'pending' && Math.hypot(dx, dy) > 7){
-    const lineMode = P.kind === 'card' && curP > .9 && P.touch;
+    const lineMode = !Lay.mob && P.kind === 'card' && curP > .9 && P.touch;
     if (lineMode && Math.abs(dx) > Math.abs(dy) * 1.2 && Lay.overflow > 0){ P.mode = 'pan'; P.off0 = car.off; car.vel = 0; clearTimeout(P.lp); }
     else if (P.touch){ clearTimeout(P.lp); P = null; return; }
     else startDrag();
@@ -1249,12 +1353,13 @@ function startDrag(){
 function moveGhost(){
   P.ghost.style.transform = `translate3d(${P.x - 42}px,${P.y - 42}px,0)`;
   const el = document.elementFromPoint(P.x, P.y);
-  const slot = el && el.closest('.slot'), mix = el && el.closest('.mixer'), pill = el && el.closest('#mixpill');
+  const slot = el && el.closest('.slot'), mix = el && el.closest('.mixer'), pill = el && el.closest('#mixpill'), bar = el && el.closest('#mbar');
+  $('#mbar').classList.toggle('hot', !!bar && P.kind === 'card');
   slotEls.forEach(s => s.classList.toggle('hot', s === slot));
   mixerEl.classList.toggle('drop-on', !!mix && curP > .5);
   $('#mixpill').classList.toggle('hot', !!pill && P.kind === 'card');
-  P.target = slot ? {slot: +slot.dataset.i} : (mix && curP > .5) ? {mixer: true} : pill ? {pill: true} : {out: true};
-  P.ghost.classList.toggle('removing', P.kind === 'slot' && !mix);
+  P.target = slot ? {slot: +slot.dataset.i} : (mix && curP > .5) || bar ? {mixer: true, bar: !!bar} : pill ? {pill: true} : {out: true};
+  P.ghost.classList.toggle('removing', P.kind === 'slot' && !mix && !bar);
 }
 function endPress(e, cancel){
   if (!P || e.pointerId !== P.pid) return;
@@ -1271,7 +1376,7 @@ function drop(p, cancel){
   const g = p.ghost;
   document.body.classList.remove('dragging');
   slotEls.forEach(s => s.classList.remove('hot', 'lifting'));
-  mixerEl.classList.remove('drop-on'); $('#mixpill').classList.remove('hot');
+  mixerEl.classList.remove('drop-on'); $('#mixpill').classList.remove('hot'); $('#mbar').classList.remove('hot');
   const tg = cancel ? {cancel: true} : (p.target || {out: true});
   let landed = -1;
   if (p.kind === 'card'){
@@ -1283,7 +1388,8 @@ function drop(p, cancel){
     else { removeSlot(p.from); toast(`${T[p.id].name} removed`); }
   }
   let target = null;
-  if (landed >= 0) target = tg.pill ? $('#mixpill') : slotEls[landed].querySelector('.slot-art');
+  if (landed >= 0) target = tg.pill ? $('#mixpill') : (tg.bar || (Lay.mob && p.kind === 'card')) ? $('#mbStack') : slotEls[landed].querySelector('.slot-art');
+  if (landed >= 0 && Lay.mob && p.kind === 'card') setTimeout(bumpBar, 300);
   else if (p.kind === 'card') target = p.el.querySelector('.art');
   if (target){
     const a = g.getBoundingClientRect(), b = target.getBoundingClientRect();
@@ -1462,13 +1568,15 @@ function frame(now){
   const n = C.length, s0 = Lay.sHero, sl = Lay.sLine;
   const total = n * sl + (n - 1) * Lay.gap;
   const baseX = Lay.overflow > 0 ? Lay.pad - car.off : (Lay.w - total) / 2;
-  const anyHover = !!hoverId && !(P && P.mode === 'drag');
+  const anyHover = !!hoverId && !Lay.mob && !(P && P.mode === 'drag');   // no fade-the-rest on phones (taps focus cards)
+  const gOff = Lay.mob ? Math.max(0, scrollY - Lay.dist) : 0;   // phones: the settled grid scrolls with the page
   for (const c of C){
     const a = norm(c.base + rot), ar = a * Math.PI / 180;
     const hx = Lay.cx + Lay.R * Math.sin(ar), hy = Lay.cy - Lay.R * Math.cos(ar);
     // cards fade as the ring carries them below the window
     const hop = clamp((Lay.h + s0 * .2 - hy) / (s0 * .9), 0, 1);
-    const lx = baseX + c.order * (sl + Lay.gap) + sl / 2, ly = Lay.lineY;
+    const lx = Lay.mob ? Lay.cx + (c.order % 3 - 1) * Lay.gpx : baseX + c.order * (sl + Lay.gap) + sl / 2;
+    const ly = Lay.mob ? Lay.gridTop + Math.floor(c.order / 3) * Lay.gpy + sl / 2 - gOff : Lay.lineY;
     const e = ease(clamp((p - (c.order / (n - 1)) * .3) / .7, 0, 1));
     const isH = hoverId === c.t.id;
     // hovering one sound fades the rest to 60%
@@ -1490,9 +1598,15 @@ function frame(now){
   hcenter.style.transform = `translate(-50%, ${-p * 80}px) scale(${1 - p * .15})`;
   $('#hint').style.opacity = clamp(1 - p * 5, 0, 1);
   const q = clamp((p - .55) / .45, 0, 1), qe = ease(q);
-  mixerEl.style.opacity = qe;
-  mixerEl.style.transform = `translate(-50%, ${(1 - qe) * 50}px)`;
-  mixerEl.style.pointerEvents = q > .6 ? '' : 'none';
+  if (!Lay.mob){
+    mixerEl.style.opacity = qe;
+    mixerEl.style.transform = `translate(-50%, ${(1 - qe) * 50}px)`;
+    mixerEl.style.pointerEvents = q > .6 ? '' : 'none';
+  } else {
+    lhead.style.top = (Lay.lhTop - gOff) + 'px';
+    const on = p > .75 && $('#library').getBoundingClientRect().top > innerHeight * .55;
+    if (on !== barOn){ barOn = on; document.documentElement.classList.toggle('baron', on); }
+  }
   lhead.style.opacity = qe;
   lhead.style.pointerEvents = q > .6 ? '' : 'none';
   edges[0].style.opacity = (qe * clamp(car.off / 50, 0, 1)).toFixed(3);
@@ -1596,7 +1710,7 @@ function openInMixer(m){
   S.name = m.name; $('#mname').value = m.name;
   if (Engine.playing && Engine.source === m.key) Engine.source = 'mixer';
   afterMixerChange(); onEngine();
-  goTo('mixer');
+  if (Lay.mob) openDrawer(); else goTo('mixer');
   toast(`“${esc(m.name)}” is in the mixer`);
 }
 
