@@ -102,8 +102,8 @@ html.mob.drawer .mbar{transform:translateY(150%)}
 .mbar.shake{animation:shake .45s}
 .mb-stack{position:relative;width:66px;height:56px;flex:none}
 .mb-stack i{position:absolute;top:3px;width:50px;height:50px;border-radius:13px;background-size:cover!important;background-position:center!important;box-shadow:0 0 0 2px #fff,0 8px 16px -8px rgba(0,0,0,.45);transition:transform .45s cubic-bezier(.3,1.4,.5,1),left .45s cubic-bezier(.3,1.4,.5,1)}
-.mb-stack i.empty{left:0;border:1.5px dashed #c6c6c6;box-shadow:none;display:grid;place-items:center;color:#a8a8a8}
-.mb-stack i.empty .ic{width:18px;height:18px}
+.mb-stack i.blank{left:0;border:1.5px dashed #c6c6c6;box-shadow:none;display:grid;place-items:center;color:#a8a8a8}
+.mb-stack i.blank .ic{width:18px;height:18px}
 .mb-mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
 .mb-name{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mb-open{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.06);display:grid;place-items:center;flex:none;transition:background .2s,transform .15s}
@@ -288,6 +288,7 @@ footer{padding:40px 24px 60px;text-align:center;font-size:11px;letter-spacing:.0
   .mactions .sp{display:none}
   .btn .lbl-long{display:none}
   .library{padding:90px 16px 60px}
+  html.mob .library{padding-top:28px}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -553,18 +554,41 @@ const G={
   rustle(o,r,10,0.03,0.08);
   for(let k=0;k<9;k++)addBird(o,r,bird(r,r()<0.5?0:1),0.02+r()*0.05);
   return o;},
- /* 11 — murmured conversation, espresso steam, pouring, cups and a stirring spoon */
- cafe(){const r=rngf(307);const o=rmsNorm(bed(307,(r)=>{const b=brownGen(r),lp=new BQ('lp',400,0.7),a=pinkGen(r),bp=new BQ('bp',1200,0.4);return i=>lp.p(b())*0.6+bp.p(a())*0.12;}),0.02);
-  for(let v=0;v<12;v++){const f0=95+r()*140,near=r(),amp=0.012+0.03*near*near,pan=r()*1.6-0.8,gl=Math.cos((pan+1)*Math.PI/4),gr=Math.sin((pan+1)*Math.PI/4);
-   layer(o,(A,B)=>{const rr=rngf(400+v),f1=new BQ('bp',500,4),f2=new BQ('bp',1500,5),lp=new BQ('lp',2600-1200*(1-near),0.7);let ph=0,syl=0,sylLen=1,talk=rr()<0.6,tl=Math.floor((1+rr()*4)*SR),pitch=f0;
-    for(let i=0;i<N;i++){if(--tl<=0){talk=!talk;tl=Math.floor((talk?1.2+rr()*4:0.6+rr()*3)*SR);}
-     if(--syl<=0){sylLen=Math.floor((0.12+rr()*0.18)*SR);syl=sylLen;f1.set(300+rr()*500,4);f2.set(900+rr()*1400,5);pitch=f0*(0.85+rr()*0.35);}
-     const u=1-syl/sylLen,e=talk?Math.sin(Math.PI*u):0;ph+=pitch/SR;ph-=Math.floor(ph);const src=(2*ph-1)*0.6+(rr()*2-1)*0.25,s=lp.p(f1.p(src)+f2.p(src)*0.6)*e*amp*8;A[i]=s*gl;B[i]=s*gr;}});}
-  {const t0=5,d=5.5,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',3500,1.5),bp2=new BQ('bp',300,2);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(2500+3000*u,1.5+u);const e=Math.min(1,t/0.3)*Math.min(1,(d-t)/0.6),gur=0.5+0.5*Math.sin(TAU*(9+6*Math.sin(t*1.3))*t);seg[j]=(bp.p(r()*2-1)*(0.7+0.3*u)+bp2.p(r()*2-1)*gur*0.8)*e;}peakNorm(seg,0.14);addEv(o,seg,Math.floor(t0*SR),1,-0.4);}
-  {const t0=13,d=2.4,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',500,6),n=new BQ('bp',2500,0.8);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(450+1100*u,6);const e=Math.min(1,t/0.15)*Math.min(1,(d-t)/0.2),x=r()*2-1;seg[j]=(bp.p(x)*0.8+n.p(x)*0.3)*e*(0.7+0.3*Math.sin(TAU*14*t));}peakNorm(seg,0.12);addEv(o,seg,Math.floor(t0*SR),1,0.3);}
-  const clink=(f,g)=>{const len=Math.floor(0.5*SR),seg=new Float32Array(len);for(const [k,a,dd] of [[1,1,0.18],[2.32,0.5,0.1],[4.1,0.3,0.06],[6.2,0.15,0.04]]){if(f*k>SR*0.45)continue;const w=TAU*f*k/SR;for(let j=0;j<len;j++)seg[j]+=Math.sin(w*j)*a*Math.exp(-j/(dd*SR));}peakNorm(seg,g);return seg;};
-  for(let k=0;k<16;k++){const t=r()*LS,f=1800+r()*1800;addEv(o,clink(f,0.03+0.08*r()),Math.floor(t*SR),1,r()*1.4-0.7);if(r()<0.4)addEv(o,clink(f*1.05,0.03),Math.floor((t+0.08+r()*0.1)*SR),1,r()*1.4-0.7);}
-  for(let q=0;q<7;q++)addEv(o,clink(3200+r()*400,0.025),Math.floor((19+q*0.28+r()*0.03)*SR),1,0.2);
+ /* 11 — a busy café: a room full of overlapping conversation, cups on saucers, stirring spoons, grinder, steam and pour */
+ cafe(){const r=rngf(307);
+  const o=rmsNorm(bed(307,(r)=>{const b=brownGen(r),lp=new BQ('lp',350,0.7),a=pinkGen(r),bp=new BQ('bp',900,0.5),m=plfo(r,5);return i=>lp.p(b())*0.5+bp.p(a())*0.1*(0.8+0.3*m(i));}),0.012);
+  /* the walla: each voice is a glottal buzz through gliding vowel formants, chopped into syllables and phrases */
+  const crowd=empty(),V=[[730,1090,2440],[530,1840,2480],[270,2290,3010],[570,840,2410],[300,870,2240],[660,1720,2410],[490,1350,1690],[440,1020,2240]];
+  for(let v=0;v<24;v++){const fem=r()<0.5,f0=fem?170+r()*60:92+r()*40,near=Math.pow(r(),2),amp=0.3+0.7*near,pan=r()*1.8-0.9,gl=Math.cos((pan+1)*Math.PI/4),gr=Math.sin((pan+1)*Math.PI/4),fs=fem?1.15:1;
+   layer(crowd,(A,B)=>{const rr=rngf(500+v*13),F=[new BQ('bp',500,5),new BQ('bp',1500,7),new BQ('bp',2500,9)],dark=new BQ('lp',1200+1500*near,0.7),hp=new BQ('hp',150,0.7);
+    let ph=0,gy=0,syl=0,sylLen=1,talk=rr()<0.55,tl=Math.floor((0.5+rr()*4)*SR),pitch=f0,pt=f0,tgt=V[0],uv=false,phr=0,phrLen=1;const cur=V[0].slice();
+    for(let i=0;i<N;i++){
+     if(--tl<=0){talk=!talk;tl=Math.floor((talk?1.5+rr()*4.5:0.4+rr()*2.2)*SR);if(talk){phr=0;phrLen=tl;}}
+     if(--syl<=0){sylLen=Math.floor((0.09+rr()*0.15)*SR);syl=sylLen;tgt=V[Math.floor(rr()*V.length)];uv=rr()<0.2;pt=f0*(0.88+rr()*0.32);}
+     if((i&31)===0)for(let k=0;k<3;k++){cur[k]+=(tgt[k]*fs-cur[k])*0.15;F[k].set(cur[k],5+k*2);}
+     phr++;pitch+=(pt*(1+0.12*(1-phr/phrLen))-pitch)*0.002;
+     const u=1-syl/sylLen,e=talk?Math.pow(Math.sin(Math.PI*u),0.7):0;
+     ph+=pitch*(1+0.02*(rr()-0.5))/SR;if(ph>=1)ph-=1;gy+=(2*ph-1-gy)*0.1;
+     const n=rr()*2-1,src=uv?n*0.45:gy*1.6+n*0.05;
+     const s=hp.p(dark.p(F[0].p(src)+F[1].p(src)*0.5+F[2].p(src)*0.22))*e*amp;A[i]=s*gl;B[i]=s*gr;}});}
+  {const k=2.2*rms(crowd);for(const c of crowd)for(let i=0;i<L;i++)c[i]=k*Math.tanh(c[i]/k);}   // tame the glottal spikes so the room, not the peaks, sets the level
+  verb(crowd,1.6,1.3,0.86);rmsNorm(crowd,0.06);addTo(o,crowd,1);
+  /* the counter and the tables */
+  const fx=empty();
+  const ring=(parts,len,noise,g)=>{const n=Math.floor(len*SR),seg=new Float32Array(n);for(const [f,a,d] of parts){if(f>SR*0.45)continue;const w=TAU*f/SR;for(let j=0;j<n;j++)seg[j]+=Math.sin(w*j)*a*Math.exp(-j/(d*SR));}for(let j=0;j<Math.min(n,200);j++)seg[j]+=(r()*2-1)*noise*Math.exp(-j/30);peakNorm(seg,g);return seg;};
+  const saucer=g=>{const f=1100+r()*900;return ring([[f,1,0.05],[f*2.7,0.6,0.03],[f*4.3,0.35,0.02],[180+r()*60,0.8,0.02]],0.25,0.9,g);};
+  const tink=(g)=>{const f=3800+r()*2200;return ring([[f,1,0.05],[f*1.6,0.4,0.03],[f*2.9,0.2,0.02]],0.2,0.2,g);};
+  for(let k=0;k<14;k++){const t=r()*LS,pan=r()*1.6-0.8,g=0.035+0.06*r();addEv(fx,saucer(g),Math.floor(t*SR),1,pan);if(r()<0.5)addEv(fx,saucer(g*0.5),Math.floor((t+0.06+r()*0.05)*SR),1,pan);}
+  for(const [t0,pan] of [[3,0.3],[11.5,-0.5],[20,0.55]]){const n=8+Math.floor(r()*8);for(let q=0;q<n;q++)addEv(fx,tink(0.025+0.025*(q%2?0.5:1)*r()),Math.floor((t0+q*(0.16+r()*0.05))*SR),1,pan);}
+  for(let k=0;k<4;k++)addEv(fx,ring([[2400+r()*1500,1,0.25],[5600+r()*1500,0.4,0.12]],0.8,0.1,0.025+0.03*r()),Math.floor(r()*L),1,r()*1.6-0.8);
+  /* grinder burst, then two knocks of the portafilter */
+  {const t0=7,d=2.6,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',1700,0.9),bp2=new BQ('bp',4200,1.2);let ph=0;for(let j=0;j<len;j++){const t=j/SR,e=Math.min(1,t/0.08)*Math.min(1,(d-t)/0.25);ph+=TAU*118/SR;const buzz=0.55+0.45*Math.sin(ph),x=r()*2-1;seg[j]=(bp.p(x)*buzz+bp2.p(x)*0.4+Math.sin(ph*2)*0.05)*e;}peakNorm(seg,0.06);addEv(fx,seg,Math.floor(t0*SR),1,0.55);
+   for(const dt of [3.3,3.6])addEv(fx,ring([[95,1,0.06],[240,0.5,0.04],[700,0.2,0.02]],0.3,0.3,0.07),Math.floor((t0+dt)*SR),1,0.5);}
+  /* steam wand frothing milk */
+  {const t0=14.5,d=5,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',3500,1.5),bp2=new BQ('bp',300,2);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(2500+3000*u,1.5+u);const e=Math.min(1,t/0.3)*Math.min(1,(d-t)/0.6),gur=0.5+0.5*Math.sin(TAU*(9+6*Math.sin(t*1.3))*t);seg[j]=(bp.p(r()*2-1)*(0.7+0.3*u)+bp2.p(r()*2-1)*gur*0.8)*e;}peakNorm(seg,0.07);addEv(fx,seg,Math.floor(t0*SR),1,0.6);}
+  /* a chair scraping back */
+  for(const t0 of [9.5,21.3]){const d=0.5+r()*0.3,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',700,4);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(600+300*u+80*Math.sin(t*40),4);seg[j]=bp.p(r()*2-1)*Math.sin(Math.PI*u)*(0.6+0.4*Math.sin(TAU*31*t));}peakNorm(seg,0.05);addEv(fx,seg,Math.floor(t0*SR),1,r()*1.2-0.6);}
+  verb(fx,0.8,1.1,0.8);addTo(o,fx,1);
   return o;},
  /* 12 — muffled wind outside, a soft snowy hush, the fire inside */
  cabin(){const o=G.fire();scaleA(o,0.55);
@@ -1017,8 +1041,8 @@ function layoutPhone(w, h){
   Lay.gpy = Lay.sLine + 48;                                        // row pitch, room for the label
   Lay.lhTop = 96; Lay.gridTop = Lay.lhTop + 52;
   Lay.gridH = Math.ceil(TRACKS.length / 3) * Lay.gpy;
-  Lay.gscroll = Math.max(0, Lay.gridTop + Lay.gridH + 120 - h);   // the grid scrolls; 120px clears the mini bar
-  Lay.dist = Math.round(h * 1.3);
+  Lay.gscroll = Math.max(0, Lay.gridTop + Lay.gridH + 56 - h);    // the grid scrolls; a little room under the last row
+  Lay.dist = Math.round(h * .9);
   Lay.overflow = 0; car.off = 0;
   Lay.stageH = h; stage.style.height = h + 'px';
   hero.style.height = (h + Lay.dist + Lay.gscroll) + 'px';
@@ -1027,7 +1051,8 @@ function layoutPhone(w, h){
 /* ======================================================================
    Cards (circle -> line carousel)
    ====================================================================== */
-const C = TRACKS.map((t, i) => ({t, i, base: i * 360 / TRACKS.length, bl: 0, order: i, el: null, f: ''}));
+const C = TRACKS.map((t, i) => ({t, i, base: i * 360 / TRACKS.length, bl: 0, order: i, el: null, f: '', rv: 0, rt: 0}));
+const MOB_SWAP = .55;   // phones: scroll progress where the faded-out ring hands over to the grid
 let rot = 6, rotVel = 0, hoverId = null, curP = 0, barOn = false;
 const car = {off: 0, vel: 0};
 const norm = a => ((a + 180) % 360 + 360) % 360 - 180;
@@ -1130,7 +1155,7 @@ function renderBar(){
   const list = mixerList(), top = list.slice(-3);
   $('#mbStack').innerHTML = top.length
     ? top.map((x, i) => `<i style="background:${T[x.id].bg};left:${i * 8}px;transform:rotate(${(i - top.length + 1) * 6}deg)"></i>`).join('')
-    : `<i class="empty">${ICON.plus}</i>`;
+    : `<i class="blank">${ICON.plus}</i>`;
   $('#mbName').textContent = S.name.trim() || (list.length ? autoName(list) : 'Tap a sound to start your mix');
   $('#mbVol').style.setProperty('--c', list.length ? T[list[list.length - 1].id].color : '#1b1b1b');
 }
@@ -1569,7 +1594,7 @@ function frame(now){
   const total = n * sl + (n - 1) * Lay.gap;
   const baseX = Lay.overflow > 0 ? Lay.pad - car.off : (Lay.w - total) / 2;
   const anyHover = !!hoverId && !Lay.mob && !(P && P.mode === 'drag');   // no fade-the-rest on phones (taps focus cards)
-  const gOff = Lay.mob ? Math.max(0, scrollY - Lay.dist) : 0;   // phones: the settled grid scrolls with the page
+  const gOff = Lay.mob ? clamp(scrollY - Lay.dist, 0, Lay.gscroll) : 0;   // phones: the settled grid scrolls with the page
   for (const c of C){
     const a = norm(c.base + rot), ar = a * Math.PI / 180;
     const hx = Lay.cx + Lay.R * Math.sin(ar), hy = Lay.cy - Lay.R * Math.cos(ar);
@@ -1581,16 +1606,23 @@ function frame(now){
     const isH = hoverId === c.t.id;
     // hovering one sound fades the rest to 60%
     c.bl += ((anyHover && !isH ? 1 : 0) - c.bl) * Math.min(1, dt * 7);
-    const x = lerp(hx, lx, e), y = lerp(hy, ly, e);
-    const sc = lerp(1, sl / s0, e);
+    let x = lerp(hx, lx, e), y = lerp(hy, ly, e), sc = lerp(1, sl / s0, e), r = lerp(a, 0, e), op0 = lerp(hop, 1, e);
+    if (Lay.mob){
+      // phones: no morph. The ring fades away, then each grid card fades up on its own as it scrolls into view
+      if (p < MOB_SWAP){ x = hx; y = hy; sc = 1; r = a; op0 = hop * (1 - ease(clamp(p / MOB_SWAP, 0, 1))); c.rv = 0; c.rt = 0; }
+      else {
+        if (!c.rt && ly - sl / 2 < innerHeight - 30) c.rt = now + (c.order % 3) * 90 + Math.min(2, Math.floor(c.order / 3)) * 70;
+        c.rv = c.rt ? ease(clamp((now - c.rt) / 520, 0, 1)) : 0;
+        x = lx; y = ly + (1 - c.rv) * 26; sc = sl / s0 * (.92 + .08 * c.rv); r = 0; op0 = c.rv;
+      }
+    }
     const dragging = P && P.mode === 'drag' && P.kind === 'card' && P.id === c.t.id;
-    const op = lerp(hop, 1, e) * (dragging ? .3 : 1) * (1 - c.bl * .4);
-    const r = lerp(a, 0, e);
+    const op = op0 * (dragging ? .3 : 1) * (1 - c.bl * .4);
     c.el.style.transform = `translate3d(${(x - s0 / 2).toFixed(2)}px,${(y - s0 / 2).toFixed(2)}px,0) rotate(${r.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
     c.el.style.opacity = op.toFixed(3);
     c.el.style.pointerEvents = op < .3 ? 'none' : '';
     c.el.style.zIndex = isH ? 20 : 1;
-    c.el.classList.toggle('lab', e > .6 || (isH && p < .5));
+    c.el.classList.toggle('lab', Lay.mob ? p >= MOB_SWAP : e > .6 || (isH && p < .5));
   }
 
   const hp = clamp(1 - p * 2.2, 0, 1);
