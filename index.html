@@ -554,42 +554,6 @@ const G={
   rustle(o,r,10,0.03,0.08);
   for(let k=0;k<9;k++)addBird(o,r,bird(r,r()<0.5?0:1),0.02+r()*0.05);
   return o;},
- /* 11 — a busy café: a room full of overlapping conversation, cups on saucers, stirring spoons, grinder, steam and pour */
- cafe(){const r=rngf(307);
-  const o=rmsNorm(bed(307,(r)=>{const b=brownGen(r),lp=new BQ('lp',350,0.7),a=pinkGen(r),bp=new BQ('bp',900,0.5),m=plfo(r,5);return i=>lp.p(b())*0.5+bp.p(a())*0.1*(0.8+0.3*m(i));}),0.012);
-  /* the walla: each voice is a glottal buzz through gliding vowel formants, chopped into syllables and phrases */
-  const crowd=empty(),V=[[730,1090,2440],[530,1840,2480],[270,2290,3010],[570,840,2410],[300,870,2240],[660,1720,2410],[490,1350,1690],[440,1020,2240]];
-  for(let v=0;v<24;v++){const fem=r()<0.5,f0=fem?170+r()*60:92+r()*40,near=Math.pow(r(),2),amp=0.3+0.7*near,pan=r()*1.8-0.9,gl=Math.cos((pan+1)*Math.PI/4),gr=Math.sin((pan+1)*Math.PI/4),fs=fem?1.15:1;
-   layer(crowd,(A,B)=>{const rr=rngf(500+v*13),F=[new BQ('bp',500,5),new BQ('bp',1500,7),new BQ('bp',2500,9)],dark=new BQ('lp',1200+1500*near,0.7),hp=new BQ('hp',150,0.7);
-    let ph=0,gy=0,syl=0,sylLen=1,talk=rr()<0.55,tl=Math.floor((0.5+rr()*4)*SR),pitch=f0,pt=f0,tgt=V[0],uv=false,phr=0,phrLen=1;const cur=V[0].slice();
-    for(let i=0;i<N;i++){
-     if(--tl<=0){talk=!talk;tl=Math.floor((talk?1.5+rr()*4.5:0.4+rr()*2.2)*SR);if(talk){phr=0;phrLen=tl;}}
-     if(--syl<=0){sylLen=Math.floor((0.09+rr()*0.15)*SR);syl=sylLen;tgt=V[Math.floor(rr()*V.length)];uv=rr()<0.2;pt=f0*(0.88+rr()*0.32);}
-     if((i&31)===0)for(let k=0;k<3;k++){cur[k]+=(tgt[k]*fs-cur[k])*0.15;F[k].set(cur[k],5+k*2);}
-     phr++;pitch+=(pt*(1+0.12*(1-phr/phrLen))-pitch)*0.002;
-     const u=1-syl/sylLen,e=talk?Math.pow(Math.sin(Math.PI*u),0.7):0;
-     ph+=pitch*(1+0.02*(rr()-0.5))/SR;if(ph>=1)ph-=1;gy+=(2*ph-1-gy)*0.1;
-     const n=rr()*2-1,src=uv?n*0.45:gy*1.6+n*0.05;
-     const s=hp.p(dark.p(F[0].p(src)+F[1].p(src)*0.5+F[2].p(src)*0.22))*e*amp;A[i]=s*gl;B[i]=s*gr;}});}
-  {const k=2.2*rms(crowd);for(const c of crowd)for(let i=0;i<L;i++)c[i]=k*Math.tanh(c[i]/k);}   // tame the glottal spikes so the room, not the peaks, sets the level
-  verb(crowd,1.6,1.3,0.86);rmsNorm(crowd,0.06);addTo(o,crowd,1);
-  /* the counter and the tables */
-  const fx=empty();
-  const ring=(parts,len,noise,g)=>{const n=Math.floor(len*SR),seg=new Float32Array(n);for(const [f,a,d] of parts){if(f>SR*0.45)continue;const w=TAU*f/SR;for(let j=0;j<n;j++)seg[j]+=Math.sin(w*j)*a*Math.exp(-j/(d*SR));}for(let j=0;j<Math.min(n,200);j++)seg[j]+=(r()*2-1)*noise*Math.exp(-j/30);peakNorm(seg,g);return seg;};
-  const saucer=g=>{const f=1100+r()*900;return ring([[f,1,0.05],[f*2.7,0.6,0.03],[f*4.3,0.35,0.02],[180+r()*60,0.8,0.02]],0.25,0.9,g);};
-  const tink=(g)=>{const f=3800+r()*2200;return ring([[f,1,0.05],[f*1.6,0.4,0.03],[f*2.9,0.2,0.02]],0.2,0.2,g);};
-  for(let k=0;k<14;k++){const t=r()*LS,pan=r()*1.6-0.8,g=0.035+0.06*r();addEv(fx,saucer(g),Math.floor(t*SR),1,pan);if(r()<0.5)addEv(fx,saucer(g*0.5),Math.floor((t+0.06+r()*0.05)*SR),1,pan);}
-  for(const [t0,pan] of [[3,0.3],[11.5,-0.5],[20,0.55]]){const n=8+Math.floor(r()*8);for(let q=0;q<n;q++)addEv(fx,tink(0.025+0.025*(q%2?0.5:1)*r()),Math.floor((t0+q*(0.16+r()*0.05))*SR),1,pan);}
-  for(let k=0;k<4;k++)addEv(fx,ring([[2400+r()*1500,1,0.25],[5600+r()*1500,0.4,0.12]],0.8,0.1,0.025+0.03*r()),Math.floor(r()*L),1,r()*1.6-0.8);
-  /* grinder burst, then two knocks of the portafilter */
-  {const t0=7,d=2.6,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',1700,0.9),bp2=new BQ('bp',4200,1.2);let ph=0;for(let j=0;j<len;j++){const t=j/SR,e=Math.min(1,t/0.08)*Math.min(1,(d-t)/0.25);ph+=TAU*118/SR;const buzz=0.55+0.45*Math.sin(ph),x=r()*2-1;seg[j]=(bp.p(x)*buzz+bp2.p(x)*0.4+Math.sin(ph*2)*0.05)*e;}peakNorm(seg,0.06);addEv(fx,seg,Math.floor(t0*SR),1,0.55);
-   for(const dt of [3.3,3.6])addEv(fx,ring([[95,1,0.06],[240,0.5,0.04],[700,0.2,0.02]],0.3,0.3,0.07),Math.floor((t0+dt)*SR),1,0.5);}
-  /* steam wand frothing milk */
-  {const t0=14.5,d=5,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',3500,1.5),bp2=new BQ('bp',300,2);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(2500+3000*u,1.5+u);const e=Math.min(1,t/0.3)*Math.min(1,(d-t)/0.6),gur=0.5+0.5*Math.sin(TAU*(9+6*Math.sin(t*1.3))*t);seg[j]=(bp.p(r()*2-1)*(0.7+0.3*u)+bp2.p(r()*2-1)*gur*0.8)*e;}peakNorm(seg,0.07);addEv(fx,seg,Math.floor(t0*SR),1,0.6);}
-  /* a chair scraping back */
-  for(const t0 of [9.5,21.3]){const d=0.5+r()*0.3,len=Math.floor(d*SR),seg=new Float32Array(len),bp=new BQ('bp',700,4);for(let j=0;j<len;j++){const t=j/SR,u=j/len;if((j&31)===0)bp.set(600+300*u+80*Math.sin(t*40),4);seg[j]=bp.p(r()*2-1)*Math.sin(Math.PI*u)*(0.6+0.4*Math.sin(TAU*31*t));}peakNorm(seg,0.05);addEv(fx,seg,Math.floor(t0*SR),1,r()*1.2-0.6);}
-  verb(fx,0.8,1.1,0.8);addTo(o,fx,1);
-  return o;},
  /* 12 — muffled wind outside, a soft snowy hush, the fire inside */
  cabin(){const o=G.fire();scaleA(o,0.55);
   addTo(o,rmsNorm(bed(313,(r)=>{const w=whiteGen(r),bp=new BQ('bp',300,1.5),bp2=new BQ('bp',600,14),lp=new BQ('lp',700,0.7),m1=plfo(r,7),g=plfo(r,5);let gust=0.5;return i=>{if((i&63)===0){const a=m1(i);bp.set(160+300*a,1+1.5*a);bp2.set(420+380*a,16);gust=0.2+0.8*Math.pow(g(i),1.6);}const x=w();return lp.p(bp.p(x)+bp2.p(x)*0.5*gust)*gust;};}),0.05),1);
@@ -652,6 +616,21 @@ const G={
  white(){const r=rngf(373);const o=rmsNorm(bed(373,(r)=>{const w=whiteGen(r),lp=new BQ('lp',7000,0.6),lp2=new BQ('lp',5000,0.6),a=pinkGen(r),hp=new BQ('hp',6000,0.7),m=plfo(r,5);return i=>lp2.p(lp.p(w()))*0.7+hp.p(a())*0.25*(0.6+0.4*m(i));}),0.09);
   const f=Math.round(60*LS)/LS,f2=Math.round(120*LS)/LS;for(let i=0;i<L;i++){const s=Math.sin(TAU*f*i/SR)*0.012+Math.sin(TAU*f2*i/SR)*0.004;o[0][i]+=s;o[1][i]+=s;}
   return o;},
+ /* 21 — metal wind chimes stirring in a garden breeze: free-bar partials, struck in clusters as the gusts rise */
+ chimes(){const r=rngf(389);const o=empty(),fx=empty();
+  const tubes=[523.3,587.3,659.3,784,880,1046.5].map((f,k)=>({f,pan:-0.7+k*0.28}));
+  const tube=(f,g)=>{const len=Math.floor(7*SR),seg=new Float32Array(len);
+   for(const [k,a,d,det] of [[1,1,5.5,0.6],[2.756,0.55,2.6,1.4],[5.404,0.3,1.2,2.1],[8.933,0.14,0.55,3]]){const fr=f*k;if(fr>SR*0.45)continue;
+    for(const dd of [0,det]){const w=TAU*(fr+dd)/SR,c2=2*Math.cos(w),dec=Math.exp(-1/(d*SR));let s1=Math.sin(-w),s2=Math.sin(-2*w),env=a*0.5;for(let j=0;j<len;j++){const s=c2*s1-s2;s2=s1;s1=s;seg[j]+=s*env;env*=dec;}}}
+   for(let j=0;j<60;j++)seg[j]+=(r()*2-1)*0.3*Math.exp(-j/10);peakNorm(seg,g);return seg;};
+  const gust=plfo(r,7);
+  for(let t=0;t<LS;){const g=gust(Math.floor(t*SR)),rate=0.25+5*g*g*g;t+=-Math.log(1-r()*0.999)/rate;if(t>=LS)break;
+   const tb=tubes[Math.floor(r()*tubes.length)],hit=0.04+0.16*(0.3+0.7*g)*(0.4+0.6*r());addEv(fx,tube(tb.f*(1+(r()-0.5)*0.002),hit),Math.floor(t*SR),1,tb.pan);}
+  verb(fx,1.1,1.2,0.82);addTo(o,fx,1);
+  addTo(o,rmsNorm(bed(389,(r)=>{const w=whiteGen(r),bp=new BQ('bp',600,0.7),lp=new BQ('lp',2500,0.7);let gu=0.5;return i=>{if((i&63)===0){const g=gust(i);bp.set(300+700*g,0.7);gu=0.15+0.85*g*g;}return lp.p(bp.p(w()))*gu;};}),0.012),1);
+  return o;},
+ /* 22 — brown noise: a deep, warm rumble, gently breathing */
+ brown(){const r=rngf(397);return rmsNorm(bed(397,(r)=>{const b=brownGen(r),hp=new BQ('hp',28,0.7),lp=new BQ('lp',900,0.6),a=pinkGen(r),lp2=new BQ('lp',400,0.7),m=plfo(r,4);return i=>hp.p(lp.p(b()))*(0.9+0.1*m(i))+lp2.p(a())*0.15;}),0.12);},
  /* building blocks used above */
  lake(){const r=rngf(181);const o=rmsNorm(bed(181,(r)=>{const a=pinkGen(r),bp=new BQ('bp',600,0.6),m=plfo(r,7);return i=>bp.p(a())*(0.5+0.5*m(i));}),0.015);
   let t=0.2;while(t<LS){const d=0.5+r()*0.9,len=Math.floor(d*SR),seg=new Float32Array(len),lp=new BQ('lp',500+r()*700,0.8),b=brownGen(r),a=pinkGen(r),hp=new BQ('hp',1500,0.7),pk=0.2+r()*0.3;
@@ -685,7 +664,7 @@ const TRACKS = [
   {id:'vinyl',      name:'Vinyl crackle',    desc:'Warm analogue hiss and soft pops', color:'#b0865a'},
   {id:'grass',      name:'Wind in the grass',desc:'Breezes sweeping across a field of long grass', color:'#b5a85a'},
   {id:'underwater', name:'Underwater',       desc:'Muffled currents and distant bubbles', color:'#2f6f8f'},
-  {id:'cafe',       name:'Coffee shop',      desc:'Steaming espresso, clinking cups and quiet chatter', color:'#8a6248'},
+  {id:'chimes',     name:'Wind chimes',      desc:'Metal chimes stirring in a warm garden breeze', color:'#8fb0b8'},
   {id:'stream',     name:'Mountain stream',  desc:'Trickling water bubbling over stones', color:'#4f9f98'},
   {id:'piano',      name:'Ambient piano',    desc:'Slow, delicate notes with a long reverb', color:'#8c8fa8'},
   {id:'glass',      name:'Rain on the window', desc:'Raindrops tapping and running down the glass', color:'#7d93a8'},
@@ -698,13 +677,14 @@ const TRACKS = [
   {id:'night',      name:'Night-time nature',desc:'Crickets, distant owls and a soft night breeze', color:'#3a4670'},
   {id:'waterfall',  name:'Distant waterfall',desc:'A soft rush of falling water in the forest', color:'#5f8f84'},
   {id:'white',      name:'White noise',      desc:'Smooth, airy broadband hush', color:'#a9b0b8'},
+  {id:'brown',      name:'Brown noise',      desc:'A deep, warm rumble, softer than white noise', color:'#9a7a5c'},
 ];
 const T = Object.fromEntries(TRACKS.map(t => [t.id, t]));
 const CURATED = [
   {key:'c1', name:'Cabin in a storm', tag:'For sleep',  tracks:[['cabin',70],['rain',45],['glass',30]]},
   {key:'c2', name:'Coastal dusk',     tag:'Unwind',     tracks:[['waves',80],['grass',30]]},
-  {key:'c3', name:'Rainy café',       tag:'Deep focus', tracks:[['cafe',60],['glass',50],['vinyl',25]]},
-  {key:'c4', name:'Zen garden',       tag:'Meditate',   tracks:[['fountain',65],['bowls',35],['woodland',25]]},
+  {key:'c3', name:'Rainy afternoon',  tag:'Deep focus', tracks:[['glass',60],['brown',40],['vinyl',25]]},
+  {key:'c4', name:'Zen garden',       tag:'Meditate',   tracks:[['fountain',65],['bowls',30],['chimes',25],['woodland',20]]},
   {key:'c5', name:'Summer night',     tag:'For sleep',  tracks:[['night',70],['lakeside',35]]},
   {key:'c6', name:'Lo-fi study',      tag:'Deep focus', tracks:[['piano',60],['vinyl',45],['rain',35]]},
   {key:'c7', name:'Into the deep',    tag:'For sleep',  tracks:[['underwater',70],['space',40]]},
@@ -714,10 +694,10 @@ const CURATED = [
   {key:'c11',name:'Slow morning',     tag:'Unwind',     tracks:[['woodland',60],['stream',35],['piano',25]]},
   {key:'c12',name:'Quiet focus',      tag:'Deep focus', tracks:[['white',50],['rain',40],['fabric',20]]},
 ];
-const BEDS = ['rain','waves','stream','grass','underwater','waterfall','white','cafe','glass','cabin'];
-const ACCENTS = ['fire','woodland','fountain','vinyl','lakeside','bowls','night','fabric','piano','space'];
+const BEDS = ['rain','waves','stream','grass','underwater','waterfall','white','brown','glass','cabin'];
+const ACCENTS = ['chimes','fire','woodland','fountain','vinyl','lakeside','bowls','night','fabric','piano','space'];
 /* sounds from earlier versions map onto their closest replacement, so saved mixes keep working */
-const LEGACY = {rainforest:'woodland', wind:'grass', leaves:'woodland', birds:'woodland', thunder:'rain', tent:'glass', crickets:'night', owls:'night', frogs:'night', bowl:'bowls', chimes:'bowls', brown:'white', pink:'white', lake:'lakeside', meadow:'grass', cicadas:'grass', cave:'underwater', train:'white', purr:'fabric'};
+const LEGACY = {rainforest:'woodland', wind:'grass', leaves:'woodland', birds:'woodland', thunder:'rain', tent:'glass', crickets:'night', owls:'night', frogs:'night', bowl:'bowls', cafe:'brown', pink:'brown', lake:'lakeside', meadow:'grass', cicadas:'grass', cave:'underwater', train:'white', purr:'fabric'};
 const migrateTracks = tracks => { const seen = new Set(); return tracks.map(([id, v]) => [LEGACY[id] || id, v]).filter(([id]) => T[id] && !seen.has(id) && seen.add(id)); };
 
 /* ======================================================================
