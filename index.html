@@ -33,7 +33,6 @@ svg{display:block}
 .links button.on{background:#fff;color:#111;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .mixpill{display:flex;align-items:center;gap:10px;height:38px;padding:0 5px 0 14px;border-radius:999px;background:rgba(255,255,255,.7);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .3s}
 .mixpill.bump{animation:bump .5s cubic-bezier(.3,1.6,.5,1)}
-.mixpill.hot{transform:scale(1.08);box-shadow:0 0 0 2px var(--ink)}
 @keyframes bump{40%{transform:scale(1.1)}}
 .dots{display:flex;gap:3px}
 .dots i{width:7px;height:7px;border-radius:50%;background:#d4d4d4;transition:background .3s}
@@ -42,9 +41,9 @@ svg{display:block}
 
 /* ---------- hero / stage ---------- */
 .hero{position:relative}
-.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;touch-action:pan-y pinch-zoom}
 .cards{position:absolute;inset:0;z-index:5;pointer-events:none}
-.card{pointer-events:auto;position:absolute;left:0;top:0;width:var(--s);height:var(--s);will-change:transform,opacity;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;outline:none}
+.card{pointer-events:auto;position:absolute;left:0;top:0;width:var(--s);height:var(--s);will-change:transform,opacity;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;outline:none}
 .card .art{position:absolute;inset:0;border-radius:24%;box-shadow:0 22px 40px -22px rgba(20,20,40,.55),0 2px 6px -2px rgba(0,0,0,.12)}
 .art{overflow:hidden;background-size:cover!important;background-position:center!important}
 .art::after{content:'';position:absolute;inset:0;background-image:var(--noise);opacity:.28;mix-blend-mode:overlay;pointer-events:none;border-radius:inherit}
@@ -79,7 +78,6 @@ svg{display:block}
 
 /* ---------- mixer ---------- */
 .mixer{position:absolute;left:50%;width:min(1120px,calc(100% - 32px));background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:30px;padding:22px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;box-shadow:0 40px 80px -50px rgba(0,0,0,.3);z-index:3;opacity:0;transition:box-shadow .25s,background .25s}
-.mixer.drop-on{background:rgba(255,255,255,.8);box-shadow:0 0 0 2px var(--ink),0 40px 80px -50px rgba(0,0,0,.3)}
 .mixer.shake{animation:shake .45s}
 @keyframes shake{20%{margin-left:-8px}40%{margin-left:8px}60%{margin-left:-5px}80%{margin-left:4px}}
 
@@ -97,7 +95,6 @@ html.mob .card .badge .ic{width:9px;height:9px}
 html.mob .mbar{display:flex}
 html.mob.baron .mbar{transform:none}
 html.mob.drawer .mbar{transform:translateY(150%)}
-.mbar.hot{box-shadow:0 0 0 2px var(--ink),0 18px 40px -18px rgba(0,0,0,.35)}
 .mbar.bump .mb-stack{animation:bump .5s cubic-bezier(.3,1.6,.5,1)}
 .mbar.shake{animation:shake .45s}
 .mb-stack{position:relative;width:66px;height:56px;flex:none}
@@ -140,9 +137,7 @@ html.mob.baron .toasts{bottom:calc(104px + env(safe-area-inset-bottom))}
 .mvol{display:flex;align-items:center;gap:8px;width:150px;color:var(--muted)}
 .slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .slot{position:relative;height:94px;border-radius:20px;border:1.5px dashed #cfcfcf;display:flex;align-items:center;gap:12px;padding:12px;transition:border-color .2s,background .2s,transform .25s,opacity .2s;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-.slot.filled{border:1.5px solid transparent;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 24px -18px rgba(0,0,0,.3);cursor:grab}
-.slot.hot{border-color:var(--ink);border-style:solid;background:rgba(255,255,255,.95);transform:scale(1.025)}
-.slot.lifting{opacity:.3}
+.slot.filled{border:1.5px solid transparent;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 24px -18px rgba(0,0,0,.3)}
 .slot.bounce{animation:slotpop .5s cubic-bezier(.3,1.5,.5,1)}
 @keyframes slotpop{0%{transform:scale(.92)}100%{transform:scale(1)}}
 .slot-num{position:absolute;bottom:9px;right:13px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#b0b0b0}
@@ -172,12 +167,8 @@ input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:#e2e
 input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--c,#1b1b1b)}
 input[type=range]::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.2)}
 
-/* ---------- drag ghost / fly ---------- */
-.ghost{position:fixed;left:0;top:0;width:84px;height:84px;z-index:100;pointer-events:none;transition:opacity .2s}
-.ghost .art{position:absolute;inset:0;border-radius:24%;box-shadow:0 30px 50px -18px rgba(0,0,0,.45);transform:rotate(-6deg) scale(1.05);transition:transform .25s}
-.ghost span{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;background:var(--ink);color:#fff;padding:4px 9px;border-radius:999px}
-.ghost.removing .art{transform:rotate(8deg) scale(.8);opacity:.6}
-.ghost.removing span::before{content:'Remove · '}
+html:not(.mob) .for-mob,html.mob .for-dk{display:none}
+/* ---------- fly to the mixer ---------- */
 .fly{position:fixed;z-index:99;border-radius:24%;pointer-events:none;background-size:cover!important}
 body.dragging,body.dragging *{cursor:grabbing!important}
 /* blob cursor (desktop pointers only) */
@@ -364,7 +355,7 @@ footer{padding:40px 24px 60px;text-align:center;font-size:11px;letter-spacing:.0
 
     <div class="lhead" id="lhead">
       <span>Sound library · <span id="libCount"></span></span>
-      <span class="lhint">Drag into the mixer — or tap to add</span>
+      <span class="lhint"><span class="for-dk">Click a sound to add it · drag to browse</span><span class="for-mob">Tap a sound to add it to your mix</span></span>
       <span class="arrows"><button id="arL" aria-label="Scroll sounds left"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><button id="arR" aria-label="Scroll sounds right"><svg class="ic" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></span>
     </div>
 
@@ -377,7 +368,7 @@ footer{padding:40px 24px 60px;text-align:center;font-size:11px;letter-spacing:.0
       <div class="mleft">
         <div class="orbbox">
           <svg class="orb" viewBox="0 0 240 240" aria-hidden="true" style="overflow:visible"><g filter="url(#blend)" id="orbg"></g></svg>
-          <div class="orb-empty" id="orbEmpty">Drop<br>sounds</div>
+          <div class="orb-empty" id="orbEmpty">Tap<br>sounds</div>
         </div>
         <div class="transport">
           <button class="bigplay" id="bigplay" aria-label="Play mix"></button>
@@ -1070,7 +1061,7 @@ C.forEach(c => {
   el.setAttribute('role', 'button'); el.setAttribute('aria-label', `${c.t.name}: add to mix`);
   el.innerHTML = `<div class="art" style="background:${c.t.bg}"></div><span class="badge">${ICON.check}</span><span class="clabel">${c.t.name}</span>`;
   el.addEventListener('pointerdown', e => beginPress(e, {kind: 'card', id: c.t.id, el}));
-  el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !(P && P.mode === 'drag')) setHover(c.t.id); });
+  el.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !P) setHover(c.t.id); });
   el.addEventListener('pointerleave', e => { if (hoverId === c.t.id) setHover(null); });
   el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleTrack(c.t.id, el); } });
   el.addEventListener('focus', () => setHover(c.t.id));
@@ -1133,7 +1124,7 @@ function renderSlots(popIndex){
     el.classList.toggle('filled', !!s);
     el.classList.remove('bounce');
     const num = `<span class="slot-num">0${i + 1}</span>`;
-    if (!s){ el.innerHTML = num + '<span class="slot-empty">Drop a sound</span>'; el.style.removeProperty('--c'); el.classList.remove('loading'); return; }
+    if (!s){ el.innerHTML = num + '<span class="slot-empty">Tap a sound</span>'; el.style.removeProperty('--c'); el.classList.remove('loading'); return; }
     const t = T[s.id];
     el.style.setProperty('--c', t.color);
     el.innerHTML = `${num}<div class="slot-art art" style="background:${t.bg}"></div>
@@ -1234,11 +1225,7 @@ slotsEl.addEventListener('input', e => {
 });
 slotsEl.addEventListener('click', e => {
   const x = e.target.closest('.slot-x'); if (x){ const i = +x.closest('.slot').dataset.i; const id = S.slots[i]?.id; removeSlot(i); if (id) toast(`${T[id].name} removed`); return; }
-  const sl = e.target.closest('.slot'); if (sl && !sl.classList.contains('filled')) toast('Drag a sound here, or tap one above');
-});
-slotsEl.addEventListener('pointerdown', e => {
-  const sl = e.target.closest('.slot.filled'); if (!sl || e.target.closest('input,button')) return;
-  const i = +sl.dataset.i; beginPress(e, {kind: 'slot', id: S.slots[i].id, from: i, el: sl});
+  const sl = e.target.closest('.slot'); if (sl && !sl.classList.contains('filled')) toast('Tap a sound to add it here');
 });
 
 $('#mname').value = S.name;
@@ -1342,92 +1329,58 @@ function updTimer(){
 setInterval(updTimer, 500);
 
 /* ======================================================================
-   Drag & drop / carousel panning (pointer events; long-press on touch)
+   Tap to add · swipe to move the sounds (pointer events)
+   The ring spins under your finger or mouse and the desktop carousel pans,
+   both with a little momentum. A press that barely moves is a tap.
    ====================================================================== */
 let P = null;
+const ringAng = (x, y) => Math.atan2(x - Lay.cx, -(y - Lay.cy)) * 180 / Math.PI;
+const canSpin = () => curP < .45;
+const canPan = () => !Lay.mob && curP > .9 && Lay.overflow > 0;
 function beginPress(e, o){
   if (e.pointerType === 'mouse' && e.button !== 0) return;
   P = {...o, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, mode: 'pending', pid: e.pointerId, touch: e.pointerType !== 'mouse', hist: []};
-  try { o.el.setPointerCapture(e.pointerId); } catch(_){}
-  if (P.touch) P.lp = setTimeout(() => { if (P && P.mode === 'pending'){ startDrag(); if (navigator.vibrate) navigator.vibrate(8); } }, 300);
 }
 window.addEventListener('pointermove', e => {
   if (!P || e.pointerId !== P.pid) return;
   P.x = e.clientX; P.y = e.clientY;
   const dx = P.x - P.x0, dy = P.y - P.y0;
   if (P.mode === 'pending' && Math.hypot(dx, dy) > 7){
-    const lineMode = !Lay.mob && P.kind === 'card' && curP > .9 && P.touch;
-    if (lineMode && Math.abs(dx) > Math.abs(dy) * 1.2 && Lay.overflow > 0){ P.mode = 'pan'; P.off0 = car.off; car.vel = 0; clearTimeout(P.lp); }
-    else if (P.touch){ clearTimeout(P.lp); P = null; return; }
-    else startDrag();
+    // on touch, a mostly-vertical move is a page scroll: let the browser have it
+    const sideways = Math.abs(dx) > Math.abs(dy) * 1.1;
+    if (canSpin() && (!P.touch || sideways)){ P.mode = 'spin'; P.a = ringAng(P.x0, P.y0); rotVel = 0; }
+    else if (canPan() && (!P.touch || sideways)){ P.mode = 'pan'; P.off0 = car.off; car.vel = 0; }
+    else { P = null; return; }
+    try { (P.el || stage).setPointerCapture(e.pointerId); } catch(_){}
+    document.body.classList.add('dragging'); setHover(null);
   }
-  if (P.mode === 'pan'){
+  if (P.mode === 'spin'){
+    const a = ringAng(P.x, P.y); let d = a - P.a; d -= Math.round(d / 360) * 360; P.a = a;
+    rot += d; P.hist.push([performance.now(), rot]); if (P.hist.length > 6) P.hist.shift();
+  } else if (P.mode === 'pan'){
     car.off = clamp(P.off0 - dx, -40, Lay.overflow + 40);
     P.hist.push([performance.now(), P.x]); if (P.hist.length > 6) P.hist.shift();
-  } else if (P.mode === 'drag') moveGhost();
+  }
 });
-document.addEventListener('touchmove', e => { if (P && P.mode === 'drag') e.preventDefault(); }, {passive: false});
 window.addEventListener('pointerup', e => endPress(e, false));
 window.addEventListener('pointercancel', e => endPress(e, true));
-
-function startDrag(){
-  P.mode = 'drag';
-  const t = T[P.id];
-  const g = document.createElement('div'); g.className = 'ghost';
-  g.innerHTML = `<div class="art" style="background:${t.bg}"></div><span>${t.name}</span>`;
-  document.body.appendChild(g); P.ghost = g;
-  document.body.classList.add('dragging');
-  if (P.kind === 'slot') slotEls[P.from].classList.add('lifting');
-  setHover(null);
-  moveGhost();
-}
-function moveGhost(){
-  P.ghost.style.transform = `translate3d(${P.x - 42}px,${P.y - 42}px,0)`;
-  const el = document.elementFromPoint(P.x, P.y);
-  const slot = el && el.closest('.slot'), mix = el && el.closest('.mixer'), pill = el && el.closest('#mixpill'), bar = el && el.closest('#mbar');
-  $('#mbar').classList.toggle('hot', !!bar && P.kind === 'card');
-  slotEls.forEach(s => s.classList.toggle('hot', s === slot));
-  mixerEl.classList.toggle('drop-on', !!mix && curP > .5);
-  $('#mixpill').classList.toggle('hot', !!pill && P.kind === 'card');
-  P.target = slot ? {slot: +slot.dataset.i} : (mix && curP > .5) || bar ? {mixer: true, bar: !!bar} : pill ? {pill: true} : {out: true};
-  P.ghost.classList.toggle('removing', P.kind === 'slot' && !mix && !bar);
-}
+// stop the page scrolling while a sideways swipe is spinning the ring
+document.addEventListener('touchmove', e => { if (P && (P.mode === 'spin' || P.mode === 'pan')) e.preventDefault(); }, {passive: false});
+// the ring and carousel can also be grabbed from the empty space around the sounds
+stage.addEventListener('pointerdown', e => {
+  if (e.target.closest('.card, .mixer, button, a, input, .lhead')) return;
+  if (canSpin() || canPan()) beginPress(e, {kind: 'bg', el: null});
+});
 function endPress(e, cancel){
   if (!P || e.pointerId !== P.pid) return;
-  clearTimeout(P.lp);
   const p = P; P = null;
-  if (p.mode === 'pending' && !cancel){ if (p.kind === 'card') toggleTrack(p.id, p.el); return; }
-  if (p.mode === 'pan'){
-    const h = p.hist; if (h.length > 1){ const [t0, x0] = h[0], [t1, x1] = h[h.length - 1]; car.vel = t1 > t0 ? -(x1 - x0) / (t1 - t0) * 1000 : 0; }
-    return;
-  }
-  if (p.mode === 'drag') drop(p, cancel);
-}
-function drop(p, cancel){
-  const g = p.ghost;
   document.body.classList.remove('dragging');
-  slotEls.forEach(s => s.classList.remove('hot', 'lifting'));
-  mixerEl.classList.remove('drop-on'); $('#mixpill').classList.remove('hot'); $('#mbar').classList.remove('hot');
-  const tg = cancel ? {cancel: true} : (p.target || {out: true});
-  let landed = -1;
-  if (p.kind === 'card'){
-    if (tg.slot != null) landed = addTrack(p.id, tg.slot);
-    else if (tg.mixer || tg.pill) landed = addTrack(p.id);
-  } else {
-    if (tg.slot != null){ if (tg.slot !== p.from){ const a = S.slots[p.from]; S.slots[p.from] = S.slots[tg.slot]; S.slots[tg.slot] = a; afterMixerChange(tg.slot); } landed = tg.slot; }
-    else if (tg.mixer || tg.cancel) landed = p.from;
-    else { removeSlot(p.from); toast(`${T[p.id].name} removed`); }
-  }
-  let target = null;
-  if (landed >= 0) target = tg.pill ? $('#mixpill') : (tg.bar || (Lay.mob && p.kind === 'card')) ? $('#mbStack') : slotEls[landed].querySelector('.slot-art');
-  if (landed >= 0 && Lay.mob && p.kind === 'card') setTimeout(bumpBar, 300);
-  else if (p.kind === 'card') target = p.el.querySelector('.art');
-  if (target){
-    const a = g.getBoundingClientRect(), b = target.getBoundingClientRect();
-    g.animate([{transform: g.style.transform, opacity: 1}, {transform: `translate3d(${b.left + b.width / 2 - 42}px,${b.top + b.height / 2 - 42}px,0) scale(${b.width / a.width})`, opacity: .4}], {duration: 320, easing: 'cubic-bezier(.3,0,.2,1)'}).onfinish = () => g.remove();
-  } else {
-    g.animate([{opacity: 1}, {opacity: 0, transform: g.style.transform + ' scale(.4) rotate(20deg)'}], {duration: 260}).onfinish = () => g.remove();
-  }
+  if (p.mode === 'pending'){ if (!cancel && p.kind === 'card') toggleTrack(p.id, p.el); return; }
+  const h = p.hist; if (h.length < 2) return;
+  const [t0, v0] = h[0], [t1, v1] = h[h.length - 1], dt = (t1 - t0) / 1000;
+  if (performance.now() - t1 > 80 || dt <= 0) return;   // held still before letting go: no fling
+  if (p.mode === 'spin') rotVel = clamp((v1 - v0) / dt, -360, 360);
+  else car.vel = -(v1 - v0) / dt;
 }
 
 /* carousel: wheel + arrows */
@@ -1466,7 +1419,7 @@ const setC = (c, x, y, r) => { c.setAttribute('cx', x.toFixed(1)); c.setAttribut
 
 function drawHero(s){
   let tx = 0, ty = 0, mtx = 0, mty = 0, pull = 0;
-  if (mouse.in && curP < .4 && !(P && P.mode === 'drag')){
+  if (mouse.in && curP < .4 && !(P && P.mode !== 'pending')){
     const b = hblobEl.getBoundingClientRect(), k = 200 / b.width;
     const dx = (mouse.x - (b.left + b.width / 2)) * k, dy = (mouse.y - (b.top + b.height / 2)) * k, d = Math.hypot(dx, dy) || 1;
     pull = Math.exp(-Math.max(0, d - 70) / 240);            // ~1 close by, fading with distance
@@ -1531,7 +1484,7 @@ const Cur = (() => {
   const fill = i => `rgb(${HB.cols[i].map(v => v | 0).join(',')})`;
   return {draw(){
     if (!started && mouse.in){ started = true; tr.forEach(p => { p.x = mouse.x; p.y = mouse.y; }); }
-    const show = mouse.in && !text && !(P && P.mode === 'drag');
+    const show = mouse.in && !text && !(P && P.mode !== 'pending');
     el.style.opacity = show ? 1 : 0;
     // trailing lobes: each chases the one ahead of it
     spring(tr[0], 'x', 'y', 'vx', 'vy', mouse.x, mouse.y, .3, .55);
@@ -1585,8 +1538,8 @@ function frame(now){
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   const p = clamp(scrollY / Lay.dist, 0, 1); curP = p;
 
-  const spin = (p < .005 && !hoverId && !(P && P.mode === 'drag')) ? 4 : 0;
-  rotVel += (spin - rotVel) * Math.min(1, dt * 2.5); rot += rotVel * dt;
+  const spin = (p < .005 && !hoverId && !(P && P.mode !== 'pending')) ? 4 : 0;
+  if (!(P && P.mode === 'spin')){ rotVel += (spin - rotVel) * Math.min(1, dt * (Math.abs(rotVel) > 8 ? 1.1 : 2.5)); rot += rotVel * dt; }   // a flung ring coasts, then settles back to its slow drift
   if (p < .02) computeOrder();
 
   if (!(P && P.mode === 'pan')){
@@ -1599,7 +1552,7 @@ function frame(now){
   const n = C.length, s0 = Lay.sHero, sl = Lay.sLine;
   const total = n * sl + (n - 1) * Lay.gap;
   const baseX = Lay.overflow > 0 ? Lay.pad - car.off : (Lay.w - total) / 2;
-  const anyHover = !!hoverId && !Lay.mob && !(P && P.mode === 'drag');   // no fade-the-rest on phones (taps focus cards)
+  const anyHover = !!hoverId && !Lay.mob && !(P && P.mode !== 'pending');   // no fade-the-rest on phones (taps focus cards)
   const gOff = Lay.mob ? clamp(scrollY - Lay.dist, 0, Lay.gscroll) : 0;   // phones: the settled grid scrolls with the page
   for (const c of C){
     const a = norm(c.base + rot), ar = a * Math.PI / 180;
@@ -1622,8 +1575,7 @@ function frame(now){
         x = lx; y = ly + (1 - c.rv) * 26; sc = sl / s0 * (.92 + .08 * c.rv); r = 0; op0 = c.rv;
       }
     }
-    const dragging = P && P.mode === 'drag' && P.kind === 'card' && P.id === c.t.id;
-    const op = op0 * (dragging ? .3 : 1) * (1 - c.bl * .4);
+    const op = op0 * (1 - c.bl * .4);
     c.el.style.transform = `translate3d(${(x - s0 / 2).toFixed(2)}px,${(y - s0 / 2).toFixed(2)}px,0) rotate(${r.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
     c.el.style.opacity = op.toFixed(3);
     c.el.style.pointerEvents = op < .3 ? 'none' : '';
